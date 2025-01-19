@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		50D2A24F2D384B6800E708E7 /* threebodyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 50D2A24E2D384B6800E708E7 /* threebodyView.h */; };
 		50D2A2512D384B6800E708E7 /* threebodyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D2A2502D384B6800E708E7 /* threebodyView.m */; };
+		50D2A2592D38513900E708E7 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D2A2582D38513900E708E7 /* ScreenSaver.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		50D2A24B2D384B6800E708E7 /* threebody.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = threebody.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		50D2A24E2D384B6800E708E7 /* threebodyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = threebodyView.h; sourceTree = "<group>"; };
 		50D2A2502D384B6800E708E7 /* threebodyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = threebodyView.m; sourceTree = "<group>"; };
+		50D2A2582D38513900E708E7 /* ScreenSaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenSaver.framework; path = System/Library/Frameworks/ScreenSaver.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -22,6 +24,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50D2A2592D38513900E708E7 /* ScreenSaver.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +36,7 @@
 			children = (
 				50D2A24D2D384B6800E708E7 /* threebody */,
 				50D2A24C2D384B6800E708E7 /* Products */,
+				50D2A2572D38513800E708E7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -51,6 +55,14 @@
 				50D2A2502D384B6800E708E7 /* threebodyView.m */,
 			);
 			path = threebody;
+			sourceTree = "<group>";
+		};
+		50D2A2572D38513800E708E7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				50D2A2582D38513900E708E7 /* ScreenSaver.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,7 +271,7 @@
 				INFOPLIST_KEY_NSPrincipalClass = threebodyView;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Goblin.threebody;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Aidan.threebody;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				WRAPPER_EXTENSION = saver;
@@ -277,7 +289,7 @@
 				INFOPLIST_KEY_NSPrincipalClass = threebodyView;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Goblin.threebody;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Aidan.threebody;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				WRAPPER_EXTENSION = saver;
