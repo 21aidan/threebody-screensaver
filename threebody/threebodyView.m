@@ -6,67 +6,124 @@
 //
 
 #import "threebodyView.h"
+#import "CelestialBody.h"
 
 @implementation threebodyView
 
-// returns a body with these parameters:
-- (instancetype)initWithPosition:(CGPoint)position velocity:(CGPoint)velocity mass:(CGFloat)mass radius:(CGFloat)radius color:(NSColor *)color {
-    
-    self = [super init];
+- (instancetype)initWithFrame:(NSRect)frame isPreview:(BOOL)isPreview {
+    self = [super initWithFrame:frame isPreview:isPreview];
     if (self) {
-        self.position = position;
-        self.velocity = velocity;
-        self.mass = mass;
-        self.radius = radius;
-        self.color = color;
+        // set it to 60 fps
+        [self setAnimationTimeInterval:1/60.0];
+        
+        // initialise the bodies array
+        self.bodies = [NSMutableArray array];
+        
+        // initialise the bodies (in a triangle)
+        CelestialBody *body1 = [[CelestialBody alloc] initWithPosition:CGPointMake(400, 400)
+                                                               velocity:CGPointMake(0, 30)
+                                                                   mass:1000
+                                                                 radius:10
+                                                                  color:[NSColor redColor]];
+        
+        CelestialBody *body2 = [[CelestialBody alloc] initWithPosition:CGPointMake(600, 400)
+                                                               velocity:CGPointMake(0, -30)
+                                                                   mass:1000
+                                                                 radius:10
+                                                                  color:[NSColor blueColor]];
+        
+        CelestialBody *body3 = [[CelestialBody alloc] initWithPosition:CGPointMake(500, 550)
+                                                               velocity:CGPointMake(-20, 0)
+                                                                   mass:1000
+                                                                 radius:10
+                                                                  color:[NSColor greenColor]];
+        
+        [self.bodies addObjectsFromArray:@[body1, body2, body3]];
     }
     return self;
 }
 
-// returns the force enacting on a body from another body
-- (CGPoint)calculateForceFromBody:(threebodyView *)otherBody {
-    // gravitational constant made bigger for visible eeffects
-    static const CGFloat G = 6.67430;
-    
-    // calculate x and y differencees between bodies
-    CGPoint positionDiff = CGPointMake(otherBody.position.x - self.position.x,
-                                       otherBody.position.y - self.position.y);
-    
-    // find diagonal distance between bodies
-    CGFloat r = sqrt(positionDiff.x * positionDiff.x + positionDiff.y * positionDiff.y);
 
-    // find magnitude of gravitational force between bodies using F = G * (m1*m2) / r^2
-    CGFloat forceMagnitude = G * (self.mass * otherBody.mass) / (r * r);
+- (void)animateOneFrame {
+    
+    CelestialBody *body1 = self.bodies[0];
+    CelestialBody *body2 = self.bodies[1];
+    CelestialBody *body3 = self.bodies[2];
+    
+    
+    // BODY 1
+    // calculate force on A from B
+    CGPoint ForceOnAFromB = [body1 calculateForceFromBody:self.bodies[1]];
+    
+    // calculate force on A from C
+    CGPoint ForceOnAFromC = [body1 calculateForceFromBody:self.bodies[2]];
+    
+    // resolve the forces
+    CGPoint ForceA = CGPointMake(ForceOnAFromB.x + ForceOnAFromC.x, ForceOnAFromB.y + ForceOnAFromC.y);
+    
+    // update the position of A
+    [body1 updateWithForce:ForceA timeStep:1.0/60/0];
+    
+    
+    //BODY 2
+    // calculate force on B from A
+    CGPoint ForceOnBFromA = [body2 calculateForceFromBody:self.bodies[0]];
+    
+    // calculate force on B from C
+    CGPoint ForceOnBFromC = [body2 calculateForceFromBody:self.bodies[2]];
+    
+    // resolve the forces
+    CGPoint ForceB = CGPointMake(ForceOnBFromA.x + ForceOnBFromC.x, ForceOnBFromA.y + ForceOnBFromC.y);
+    
+    // update the position of B
+    [body2 updateWithForce:ForceB timeStep:1.0/60/0];
+    
+    
+    // BODY 3
+    // calculate force on C from B
+    CGPoint ForceOnCFromB = [body3 calculateForceFromBody:self.bodies[1]];
+    
+    // calculate force on C from A
+    CGPoint ForceOnCFromA = [body3 calculateForceFromBody:self.bodies[0]];
+    
+    // resolve the forces
+    CGPoint ForceC = CGPointMake(ForceOnCFromB.x + ForceOnCFromA.x, ForceOnCFromB.y + ForceOnCFromA.y);
+    
+    // update the position of C
+    [body3 updateWithForce:ForceC timeStep:1.0/60.0];
+    
 
-    
-    // break force into x and y components by using their x and y distances as a ratio
-    CGFloat forceX = forceMagnitude * (positionDiff.x / r);
-    CGFloat forceY = forceMagnitude * (positionDiff.y / r);
-    
-    // return force as a point (x and y)
-    return CGPointMake(forceX, forceY);
+    // tell the view it needs to redraw
+    [self setNeedsDisplay:YES];
 }
 
-// updates the position of a body depending on the force acting on it
-- (void)updateWithForce:(CGPoint)force timeStep:(CGFloat)dt {
-    // calculate acceleration from force
-    CGFloat accelerationX = force.x / self.mass;
-    CGFloat accelerationY = force.y / self.mass;
+- (void)drawRect:(NSRect)rect {
+    CelestialBody *body1 = self.bodies[0];
+    CelestialBody *body2 = self.bodies[1];
+    CelestialBody *body3 = self.bodies[2];
     
-    // update velocity using a = dv/dt
-    self.velocity = CGPointMake(
-                                self.velocity.x + accelerationX * dt,
-                                self.velocity.y + accelerationY * dt
-                                );
+    // create and fill a circle at the body's position
+    NSRect body1Rect = NSMakeRect(body1.position.x - body1.radius,
+                                  body1.position.y - body1.radius,
+                                  body1.radius *2,
+                                  body1.radius * 2);
+    [body1.color set];
+    [[NSBezierPath bezierPathWithOvalInRect:body1Rect] fill];
     
-    // update position using v = dx/dt
-    self.position = CGPointMake(
-                                self.position.x + self.velocity.x * dt,
-                                self.position.y + self.velocity.y * dt
-                                );
+    NSRect body2Rect = NSMakeRect(body2.position.x - body2.radius,
+                                  body2.position.y - body2.radius,
+                                  body2.radius *2,
+                                  body2.radius * 2);
+    [body2.color set];
+    [[NSBezierPath bezierPathWithOvalInRect:body2Rect] fill];
+
+    NSRect body3Rect = NSMakeRect(body3.position.x - body3.radius,
+                                  body3.position.y - body3.radius,
+                                  body3.radius *2,
+                                  body3.radius * 2);
+    [body3.color set];
+    [[NSBezierPath bezierPathWithOvalInRect:body3Rect] fill];
+    
 }
-
-
-
 
 @end

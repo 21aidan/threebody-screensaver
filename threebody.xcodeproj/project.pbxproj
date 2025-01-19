@@ -10,6 +10,7 @@
 		50D2A24F2D384B6800E708E7 /* threebodyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 50D2A24E2D384B6800E708E7 /* threebodyView.h */; };
 		50D2A2512D384B6800E708E7 /* threebodyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D2A2502D384B6800E708E7 /* threebodyView.m */; };
 		50D2A2592D38513900E708E7 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D2A2582D38513900E708E7 /* ScreenSaver.framework */; };
+		50D2A25F2D3DB1C400E708E7 /* CelestialBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D2A25E2D3DB1C400E708E7 /* CelestialBody.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +18,8 @@
 		50D2A24E2D384B6800E708E7 /* threebodyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = threebodyView.h; sourceTree = "<group>"; };
 		50D2A2502D384B6800E708E7 /* threebodyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = threebodyView.m; sourceTree = "<group>"; };
 		50D2A2582D38513900E708E7 /* ScreenSaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenSaver.framework; path = System/Library/Frameworks/ScreenSaver.framework; sourceTree = SDKROOT; };
+		50D2A25D2D3DB1A000E708E7 /* CelestialBody.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CelestialBody.h; sourceTree = "<group>"; };
+		50D2A25E2D3DB1C400E708E7 /* CelestialBody.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CelestialBody.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +56,8 @@
 			children = (
 				50D2A24E2D384B6800E708E7 /* threebodyView.h */,
 				50D2A2502D384B6800E708E7 /* threebodyView.m */,
+				50D2A25D2D3DB1A000E708E7 /* CelestialBody.h */,
+				50D2A25E2D3DB1C400E708E7 /* CelestialBody.m */,
 			);
 			path = threebody;
 			sourceTree = "<group>";
@@ -144,6 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50D2A25F2D3DB1C400E708E7 /* CelestialBody.m in Sources */,
 				50D2A2512D384B6800E708E7 /* threebodyView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
