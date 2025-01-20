@@ -20,6 +20,7 @@
         self.mass = mass;
         self.radius = radius;
         self.color = color;
+        self.trailPositions = [NSMutableArray array];
     }
     return self;
 }
@@ -27,7 +28,8 @@
 // returns the force enacting on a body from another body
 - (CGPoint)calculateForceFromBody:(CelestialBody *)otherBody {
     // gravitational constant made bigger for visible eeffects
-    static const CGFloat G = 2000.67430;
+    static const CGFloat G = 50000;
+    CGFloat maxForce = 10000;
     
     // calculate x and y differencees between bodies
     CGPoint positionDiff = CGPointMake(otherBody.position.x - self.position.x,
@@ -37,7 +39,7 @@
     CGFloat r = sqrt(positionDiff.x * positionDiff.x + positionDiff.y * positionDiff.y);
 
     // find magnitude of gravitational force between bodies using F = G * (m1*m2) / r^2
-    CGFloat forceMagnitude = G * (self.mass * otherBody.mass) / (r * r);
+    CGFloat forceMagnitude = MIN(G * (self.mass * otherBody.mass) / (r * r), maxForce);
 
     
     // break force into x and y components by using their x and y distances as a ratio
@@ -65,6 +67,14 @@
                                 self.position.x + self.velocity.x * dt,
                                 self.position.y + self.velocity.y * dt
                                 );
+}
+
+// updates the trail array
+- (void)updateTrail {
+    [self.trailPositions addObject:[NSValue valueWithPoint:self.position]];
+    if (self.trailPositions.count > 1000) {
+        [self.trailPositions removeObjectAtIndex:0];
+    }
 }
 
 

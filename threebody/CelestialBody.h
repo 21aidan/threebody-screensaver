@@ -15,6 +15,7 @@
 @property (nonatomic) CGFloat mass;
 @property (nonatomic) CGFloat radius;
 @property (nonatomic, strong) NSColor *color;
+@property (nonatomic, strong) NSMutableArray<NSValue *> *trailPositions;
 
 //methods
 - (instancetype)initWithPosition:(CGPoint)position
@@ -26,5 +27,7 @@
 - (CGPoint)calculateForceFromBody:(CelestialBody *)otherBody;
 
 - (void)updateWithForce:(CGPoint)force timeStep:(CGFloat)dt;
+
+- (void)updateTrail;
 
 @end

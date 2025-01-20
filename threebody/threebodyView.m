@@ -21,21 +21,21 @@
         
         // initialise the bodies (in a triangle)
         CelestialBody *body1 = [[CelestialBody alloc] initWithPosition:CGPointMake(600, 600)
-                                                               velocity:CGPointMake(0, 60)
-                                                                   mass:1000
+                                                               velocity:CGPointMake(0, 120)
+                                                                   mass:500
                                                                  radius:20
                                                                   color:[NSColor redColor]];
         
         CelestialBody *body2 = [[CelestialBody alloc] initWithPosition:CGPointMake(800, 600)
                                                                velocity:CGPointMake(0, 0)
-                                                                   mass:1000
-                                                                 radius:20
+                                                                   mass:700
+                                                                 radius:30
                                                                   color:[NSColor blueColor]];
         
         CelestialBody *body3 = [[CelestialBody alloc] initWithPosition:CGPointMake(1000, 600)
-                                                               velocity:CGPointMake(0, -60)
-                                                                   mass:1000
-                                                                 radius:20
+                                                               velocity:CGPointMake(0, -120)
+                                                                   mass:500
+                                                                 radius:25
                                                                   color:[NSColor greenColor]];
         
         [self.bodies addObjectsFromArray:@[body1, body2, body3]];
@@ -98,19 +98,22 @@
     
     
     for (CelestialBody *body in self.bodies) {
+        
+        [body updateTrail];
+        
         // Check for boundary collisions and adjust the position if necessary
-        if (body.position.x - body.radius < 0) {
+        if (body.position.x - body.radius < -400) {
             body.position = CGPointMake(body.radius, body.position.y);
             body.velocity = CGPointMake(-body.velocity.x / 10, body.velocity.y); // Reverse X velocity
-        } else if (body.position.x + body.radius > bounds.size.width) {
+        } else if (body.position.x + body.radius > bounds.size.width + 400) {
             body.position = CGPointMake(bounds.size.width - body.radius, body.position.y);
             body.velocity = CGPointMake(-body.velocity.x / 10, body.velocity.y); // Reverse X velocity
         }
         
-        if (body.position.y - body.radius < 0) {
+        if (body.position.y - body.radius < -400) {
             body.position = CGPointMake(body.position.x, body.radius);
             body.velocity = CGPointMake(body.velocity.x, -body.velocity.y / 10); // Reverse Y velocity
-        } else if (body.position.y + body.radius > bounds.size.height) {
+        } else if (body.position.y + body.radius > bounds.size.height + 400) {
             body.position = CGPointMake(body.position.x, bounds.size.height - body.radius);
             body.velocity = CGPointMake(body.velocity.x, -body.velocity.y / 10); // Reverse Y velocity
         }
@@ -126,12 +129,16 @@
     CelestialBody *body3 = self.bodies[2];
     
     // create and fill a circle at the body's position
+    [self drawTrailForBody:body1];
+    [self drawTrailForBody:body2];
+    [self drawTrailForBody:body3];
     NSRect body1Rect = NSMakeRect(body1.position.x - body1.radius,
                                   body1.position.y - body1.radius,
                                   body1.radius *2,
                                   body1.radius * 2);
     [body1.color set];
     [[NSBezierPath bezierPathWithOvalInRect:body1Rect] fill];
+    
     
     NSRect body2Rect = NSMakeRect(body2.position.x - body2.radius,
                                   body2.position.y - body2.radius,
@@ -140,6 +147,7 @@
     [body2.color set];
     [[NSBezierPath bezierPathWithOvalInRect:body2Rect] fill];
 
+    
     NSRect body3Rect = NSMakeRect(body3.position.x - body3.radius,
                                   body3.position.y - body3.radius,
                                   body3.radius *2,
@@ -148,5 +156,26 @@
     [[NSBezierPath bezierPathWithOvalInRect:body3Rect] fill];
     
 }
+
+- (void)drawTrailForBody:(CelestialBody *)body {
+    NSBezierPath *trailPath = [NSBezierPath bezierPath];
+    
+    // Only use every nth point to draw the path
+    NSInteger step = 5; // Draw every 5th point
+    for (NSInteger i = 0; i < body.trailPositions.count; i += step) {
+        CGPoint position = [body.trailPositions[i] pointValue];
+        if (i == 0) {
+            [trailPath moveToPoint:position];
+        } else {
+            [trailPath lineToPoint:position];
+        }
+    }
+    
+    [body.color set];
+    [trailPath stroke];
+}
+
+
+
 
 @end
