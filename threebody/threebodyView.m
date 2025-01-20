@@ -20,22 +20,22 @@
         self.bodies = [NSMutableArray array];
         
         // initialise the bodies (in a triangle)
-        CelestialBody *body1 = [[CelestialBody alloc] initWithPosition:CGPointMake(400, 400)
-                                                               velocity:CGPointMake(0, 30)
+        CelestialBody *body1 = [[CelestialBody alloc] initWithPosition:CGPointMake(600, 600)
+                                                               velocity:CGPointMake(0, 60)
                                                                    mass:1000
-                                                                 radius:10
+                                                                 radius:20
                                                                   color:[NSColor redColor]];
         
-        CelestialBody *body2 = [[CelestialBody alloc] initWithPosition:CGPointMake(600, 400)
-                                                               velocity:CGPointMake(0, -30)
+        CelestialBody *body2 = [[CelestialBody alloc] initWithPosition:CGPointMake(800, 600)
+                                                               velocity:CGPointMake(0, 0)
                                                                    mass:1000
-                                                                 radius:10
+                                                                 radius:20
                                                                   color:[NSColor blueColor]];
         
-        CelestialBody *body3 = [[CelestialBody alloc] initWithPosition:CGPointMake(500, 550)
-                                                               velocity:CGPointMake(-20, 0)
+        CelestialBody *body3 = [[CelestialBody alloc] initWithPosition:CGPointMake(1000, 600)
+                                                               velocity:CGPointMake(0, -60)
                                                                    mass:1000
-                                                                 radius:10
+                                                                 radius:20
                                                                   color:[NSColor greenColor]];
         
         [self.bodies addObjectsFromArray:@[body1, body2, body3]];
@@ -45,6 +45,9 @@
 
 
 - (void)animateOneFrame {
+    
+    NSRect bounds = [self bounds]; // Get the bounds of the view
+
     
     CelestialBody *body1 = self.bodies[0];
     CelestialBody *body2 = self.bodies[1];
@@ -62,7 +65,7 @@
     CGPoint ForceA = CGPointMake(ForceOnAFromB.x + ForceOnAFromC.x, ForceOnAFromB.y + ForceOnAFromC.y);
     
     // update the position of A
-    [body1 updateWithForce:ForceA timeStep:1.0/60/0];
+    [body1 updateWithForce:ForceA timeStep:1.0/60.0];
     
     
     //BODY 2
@@ -76,7 +79,7 @@
     CGPoint ForceB = CGPointMake(ForceOnBFromA.x + ForceOnBFromC.x, ForceOnBFromA.y + ForceOnBFromC.y);
     
     // update the position of B
-    [body2 updateWithForce:ForceB timeStep:1.0/60/0];
+    [body2 updateWithForce:ForceB timeStep:1.0/60.0];
     
     
     // BODY 3
@@ -92,6 +95,26 @@
     // update the position of C
     [body3 updateWithForce:ForceC timeStep:1.0/60.0];
     
+    
+    
+    for (CelestialBody *body in self.bodies) {
+        // Check for boundary collisions and adjust the position if necessary
+        if (body.position.x - body.radius < 0) {
+            body.position = CGPointMake(body.radius, body.position.y);
+            body.velocity = CGPointMake(-body.velocity.x / 10, body.velocity.y); // Reverse X velocity
+        } else if (body.position.x + body.radius > bounds.size.width) {
+            body.position = CGPointMake(bounds.size.width - body.radius, body.position.y);
+            body.velocity = CGPointMake(-body.velocity.x / 10, body.velocity.y); // Reverse X velocity
+        }
+        
+        if (body.position.y - body.radius < 0) {
+            body.position = CGPointMake(body.position.x, body.radius);
+            body.velocity = CGPointMake(body.velocity.x, -body.velocity.y / 10); // Reverse Y velocity
+        } else if (body.position.y + body.radius > bounds.size.height) {
+            body.position = CGPointMake(body.position.x, bounds.size.height - body.radius);
+            body.velocity = CGPointMake(body.velocity.x, -body.velocity.y / 10); // Reverse Y velocity
+        }
+    }
 
     // tell the view it needs to redraw
     [self setNeedsDisplay:YES];
